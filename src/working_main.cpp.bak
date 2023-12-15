@@ -1,0 +1,230 @@
+/*
+#include <window.h>
+#include <component.h>
+
+int main(void)
+{
+    Window window;
+    window.show();
+
+    auto rect = Rectangle(1, 2);
+    rect.render(GL_QUADS);
+    // rect.translate(Coord{Z
+	return 0;
+}
+*/
+#if defined(_MSC_VER)
+ // Make MS math.h define M_PI
+ #define _USE_MATH_DEFINES
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#include <glad/gl.h>
+#include <GL/glut.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
+#include <linmath.h>
+
+
+/*****************************************************************************
+ * Various declarations and macros
+ *****************************************************************************/
+
+/* Prototypes */
+void init( void );
+void display( void );
+void reshape( GLFWwindow* window, int w, int h );
+void key_callback( GLFWwindow* window, int key, int scancode, int action, int mods );
+
+/* Animation speed (50.0 mimics the original GLUT demo speed) */
+#define ANIMATION_SPEED 50.f
+
+#define RADIUS           70.f
+#define STEP_LONGITUDE   22.5f                   /* 22.5 makes 8 bands like original Boing */
+#define STEP_LATITUDE    22.5f
+
+/* Maximum allowed delta time per physics iteration */
+#define MAX_DELTA_T 0.02f
+
+#define DIST_BALL       (RADIUS * 2.f + RADIUS * 0.1f)
+#define VIEW_SCENE_DIST (DIST_BALL * 3.f + 200.f)/* distance from viewer to middle of boing area */
+
+/* Draw ball, or its shadow */
+typedef enum { DRAW_BALL, DRAW_BALL_SHADOW } DRAW_BALL_ENUM;
+
+/* Vertex type */
+typedef struct {float x; float y; float z;} vertex_t;
+
+/* Global vars */
+int windowed_xpos, windowed_ypos, windowed_width, windowed_height;
+int width, height;
+GLfloat deg_rot_y       = 0.f;
+GLfloat deg_rot_y_inc   = 2.f;
+int override_pos        = GLFW_FALSE;
+GLfloat cursor_x        = 0.f;
+GLfloat cursor_y        = 0.f;
+
+/* Random number generator */
+#ifndef RAND_MAX
+ #define RAND_MAX 4095
+#endif
+
+void CrossProduct( vertex_t a, vertex_t b, vertex_t c, vertex_t *n )
+{
+   GLfloat u1, u2, u3;
+   GLfloat v1, v2, v3;
+
+   u1 = b.x - a.x;
+   u2 = b.y - a.y;
+   u3 = b.y - a.z;
+
+   v1 = c.x - a.x;
+   v2 = c.y - a.y;
+   v3 = c.z - a.z;
+
+   n->x = u2 * v3 - v2 * u3;
+   n->y = u3 * v1 - v3 * u1;
+   n->z = u1 * v2 - v1 * u2;
+}
+
+
+#define BOING_DEBUG 0
+
+
+/*****************************************************************************
+ * init()
+ *****************************************************************************/
+void init( void )
+{
+   /*
+    * Clear background.
+    */
+   glClearColor( 0.55f, 0.55f, 0.55f, 0.f );
+
+   glShadeModel( GL_FLAT );
+}
+
+
+/*****************************************************************************
+ * display()
+ *****************************************************************************/
+void display(void)
+{
+   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+   glPushMatrix();
+
+    glPushMatrix();
+    glColor3f(1.0, 0.0, -10);
+   glBegin(GL_TRIANGLES);
+       glVertex3f(0, 0, 0);
+       glVertex3f(0, 1, 0);
+       glVertex3f(1, 0, 0);
+   glEnd();
+   glPopMatrix();
+
+   glPopMatrix();
+   glFlush();
+}
+
+
+/*****************************************************************************
+ * reshape()
+ *****************************************************************************/
+void reshape( GLFWwindow* window, int w, int h )
+{
+    glViewport( 0, 0, (GLsizei)w, (GLsizei)h );
+    glLoadIdentity();
+    gluPerspective(45.0f, (float) w / (float) h, 0.1f, 250.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+void key_callback( GLFWwindow* window, int key, int scancode, int action, int mods )
+{
+    if (action != GLFW_PRESS)
+        return;
+
+    if (key == GLFW_KEY_ESCAPE && mods == 0)
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    if ((key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT) ||
+        (key == GLFW_KEY_F11 && mods == GLFW_MOD_ALT))
+    {
+        if (glfwGetWindowMonitor(window))
+        {
+            glfwSetWindowMonitor(window, NULL,
+                                 windowed_xpos, windowed_ypos,
+                                 windowed_width, windowed_height, 0);
+        }
+        else
+        {
+            GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+            if (monitor)
+            {
+                const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+                glfwGetWindowPos(window, &windowed_xpos, &windowed_ypos);
+                glfwGetWindowSize(window, &windowed_width, &windowed_height);
+                glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+            }
+        }
+    }
+}
+
+/*======================================================================*
+ * main()
+ *======================================================================*/
+
+int main( void )
+{
+   GLFWwindow* window;
+
+   /* Init GLFW */
+   if( !glfwInit() )
+      exit( EXIT_FAILURE );
+
+   window = glfwCreateWindow( 400, 400, "Boing (classic Amiga demo)", NULL, NULL );
+   if (!window)
+   {
+       glfwTerminate();
+       exit( EXIT_FAILURE );
+   }
+
+   glfwSetWindowAspectRatio(window, 1, 1);
+
+   glfwSetFramebufferSizeCallback(window, reshape);
+   glfwSetKeyCallback(window, key_callback);
+
+   glfwMakeContextCurrent(window);
+   gladLoadGL(glfwGetProcAddress);
+   glfwSwapInterval( 1 );
+
+   glfwGetFramebufferSize(window, &width, &height);
+   reshape(window, width, height);
+
+   glfwSetTime( 0.0 );
+
+   init();
+
+   /* Main loop */
+   for (;;)
+   {
+
+       /* Draw one frame */
+       display();
+
+       /* Swap buffers */
+       glfwSwapBuffers(window);
+       glfwPollEvents();
+
+       /* Check if we are still running */
+       if (glfwWindowShouldClose(window))
+           break;
+   }
+
+   glfwTerminate();
+   exit( EXIT_SUCCESS );
+}
+
