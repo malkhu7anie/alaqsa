@@ -1,13 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
-#include <glad/gl.h>
-#include <GL/glu.h>
-
 #include <utils.h>
 #include <renderer.h>
 
