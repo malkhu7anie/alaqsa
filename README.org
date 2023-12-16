@@ -8,21 +8,23 @@
     - press run to build the project.
 
 ** Linux
-    - open the project root folder
-	#+BEGIN_SRC sh
-	    mkdir build
-	    cd build
-	#+END_SRC
-    - configure 
-	#+BEGIN_SRC sh
-	    cmake ../
-	#+END_SRC
-    - build
-	#+BEGIN_SRC sh
-	    using cmake
-		cmake --build .
-	    or alternatively using make
-		make
-	#+END_SRC
+- open the project root folder
+  #+BEGIN_SRC sh
+    mkdir build
+    cd build
+  #+END_SRC
+- configure 
+  #+BEGIN_SRC sh
+    cmake ../
+  #+END_SRC
+- build
+  using cmake
+  #+BEGIN_SRC sh
+    cmake --build .
+  #+END_SRC
+  or alternatively using make
+  #+BEGIN_SRC sh
+    make
+  #+END_SRC
 
 
