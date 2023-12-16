@@ -1,10 +1,18 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+#define _USE_MATH_DEFINES
+
+#include <cmath>
 #include <memory>
 #include <vector>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #define GLFW_INCLUDE_NONE
+
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 
@@ -101,6 +109,5 @@ public:
     Skybox(const float& len);
     void draw(GLenum);
 };
-
 
 #endif

@@ -10,8 +10,6 @@ ENDIF ()
 # find_package(GLU REQUIRED)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only")
-# set(GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only" )
-# set(GLFW_INSTALL OFF CACHE BOOL  "GLFW lib only")
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLAD_GL "")
@@ -46,7 +44,7 @@ target_include_directories(${PROJECT_NAME}
 )
 
 find_package(Threads REQUIRED)
-target_link_libraries(${PROJECT_NAME} OpenGL::GL OpenGL::GLU glfw glm glut)
+target_link_libraries(${PROJECT_NAME} OpenGL::GL OpenGL::GLU glfw glm freeglut)
 
 IF (MSVC)
 	message("---------- using MSVC C++ compiler ----------")

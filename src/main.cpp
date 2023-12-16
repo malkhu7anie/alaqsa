@@ -2,12 +2,11 @@
 
 int main(void)
 {
-
     auto ent = std::make_shared<Entity>();
 
-    auto rect = std::make_shared<Rectangle>(20, 10);
-    rect->translate(Coord{X, -4}, Coord{Y, -3}, Coord{Z, -40});
-    ent->add(rect);
+    // auto rect = std::make_shared<Rectangle>(20, 10);
+    // rect->translate(Coord{X, -4}, Coord{Y, -3}, Coord{Z, -40});
+    // ent->add(rect);
 
     auto circle = std::make_shared<Circle>(10);
     circle->translate(Coord{X, -4}, Coord{Y, -3}, Coord{Z, -70});
