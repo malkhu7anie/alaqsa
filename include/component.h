@@ -20,12 +20,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <texture.h>
+
 enum AXIS {
     X, Y, Z
-};
-
-enum ACTION {
-    SCALE, ROTATE, TRANSLATE
 };
 
 struct Coord {
@@ -74,6 +72,9 @@ class Renderable : public Component, public Transform {
 public:
     virtual void render(GLenum);
     glm::vec3 colour = {1, 1, 1};
+
+    Texture texture;
+    std::vector<glm::vec2> tex_cor;
 };
 
 class Shape : public Renderable {

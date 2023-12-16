@@ -1,6 +1,7 @@
 * Building the project
-
-    git clone --recursive https://github.com/malkhu7anie/alaqsa.git
+#+BEGIN_SRC sh
+  git clone --recursive https://github.com/malkhu7anie/alaqsa.git
+#+END_SRC
 
 ** Windows
     - open the project directory in visual studio

@@ -1,13 +1,13 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
+set(CMAKE_CXX_STANDARD 17)
+
 project (alaqsa)
 
 find_package(OpenGL REQUIRED)
 IF (OpenGL_FOUND)
 	message("---------- found opengl library ----------")
 ENDIF ()
-
-# find_package(GLU REQUIRED)
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL  "GLFW lib only")
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)

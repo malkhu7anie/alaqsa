@@ -7,8 +7,7 @@
 class Texture { 
 public:
     Texture(const std::string& filename);
-    void load(const std::string& filename, 
-            int width = {}, int height = {}, int n = {});
+    void load(const std::string&, int = {}, int = {}, int = {});
     void bind();
     void unbind();
 

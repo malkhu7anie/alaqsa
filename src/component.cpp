@@ -42,17 +42,18 @@ void Renderable::render(GLenum mode)
     }
     glPushMatrix();
     glColor3f(colour.x, colour.y, colour.z);
-    glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(1.0, 1.0);
-    // if (texture.size()) {
-    //     glBindTexture(GL_TEXTURE_2D, texture[0]);
-    // }
+    if (texture.id) {
+        glBindTexture(GL_TEXTURE_2D, texture[0]);
+    }
     glBegin(mode);
-        for (int i = 0; i < transformed_vertex.size(); ++i) {
-            // glTexCoord2f(tex_idx[i % 4].x, tex_idx[i % 4].y);
-            glVertex3f(transformed_vertex[i].x, 
-                       transformed_vertex[i].y,
-                       transformed_vertex[i].z);
+        auto tex = tex_cor.begin();
+        for (auto& vert : transformed_vertex) {
+            if (tex != tex_cor.end()) {
+                glTexCoord2f(tex->x, tex->y);
+                ++tex;
+            }
+            glVertex3f(vert.x, vert.y, vert.z);
         }
     glEnd();
     glPopMatrix();
