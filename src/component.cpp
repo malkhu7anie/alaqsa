@@ -44,7 +44,7 @@ void Renderable::render(GLenum mode)
     glColor3f(colour.x, colour.y, colour.z);
     glPolygonOffset(1.0, 1.0);
     if (texture.id) {
-        glBindTexture(GL_TEXTURE_2D, texture[0]);
+        // glBindTexture(GL_TEXTURE_2D, texture[0]);
     }
     glBegin(mode);
         auto tex = tex_cor.begin();

@@ -1,5 +1,4 @@
 #include <entity.h>
-#include <iostream>
 
 void Entity::add(std::shared_ptr<Shape> component)
 {

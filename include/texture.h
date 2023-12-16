@@ -1,11 +1,12 @@
+#ifndef TEXTURE_H
+#define TEXTURE_H
+
 #include <GL/glu.h>
 #include <utils.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
 class Texture { 
 public:
+    Texture();
     Texture(const std::string& filename);
     void load(const std::string&, int = {}, int = {}, int = {});
     void bind();
@@ -13,3 +14,5 @@ public:
 
     unsigned int id;
 };
+
+#endif

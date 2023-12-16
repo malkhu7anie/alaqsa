@@ -1,5 +1,13 @@
 #include <texture.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
+Texture::Texture()
+	: id {}
+{
+}
+
 Texture::Texture(const std::string& filename) 
 {
     glGenTextures(1, &id);
